@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+#
+# Copyright 2019 asdf-deno authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+function fail() {
+  echo -e "\e[31mFail:\e[m $* 😭"
+  exit 1
+}
+
+function install_deno() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
+
+  local platform
+
+  if [[ "$OSTYPE" == "linux"* ]]; then
+    platform="linux"
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    platform="osx"
+  else
+    fail "Unsupported platform..."
+  fi
+
+  local download_url="https://github.com/denoland/deno/releases/download/v${version}/deno_${platform}_x64.gz"
+
+  (
+    echo "∗ Downloading and installing deno..."
+    curl --silent --location --create-dirs --output "${install_path}/bin/deno.gz" "$download_url" || fail "Could not download deno $version"
+    gzip -d "${install_path}/bin/deno.gz" || fail "Could not uncompress"
+    chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed deno binary"
+
+    echo
+    echo "=================================================="
+    echo "Deno $version has been installed!"
+    echo "--------------------------------------------------"
+    echo "Activate globally with:"
+    echo
+    echo "$ asdf global deno $version"
+    echo "--------------------------------------------------"
+    echo "Activate locally in the current folder with:"
+    echo
+    echo "$ asdf local deno $version"
+    echo "=================================================="
+    echo
+  ) || (
+    rm -rf "$install_path"
+    fail "An error occurred"
+  )
+}
+
+install_deno "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
