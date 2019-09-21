@@ -1,0 +1,27 @@
+name: Main workflow
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        deno: [0.2.9, 0.18.0]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install asdf
+        run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
+
+      - name: Install Deno and run test
+        run: |
+          . $HOME/asdf/asdf.sh
+          asdf plugin-add deno $GITHUB_WORKSPACE
+          asdf install deno ${{ matrix.deno }}
+          asdf global deno ${{ matrix.deno }}
+          deno --version
