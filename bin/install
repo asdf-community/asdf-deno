@@ -29,15 +29,20 @@ function install_deno() {
 
   local platform
 
-  if [[ "$OSTYPE" == "linux"* ]]; then
-    platform="linux"
-  elif [[ "$OSTYPE" == "darwin"* ]]; then
-    platform="osx"
-  else
-    fail "Unsupported platform..."
-  fi
+  case "$OSTYPE" in
+    darwin*) platform="osx" ;;
+    linux*) platform="linux" ;;
+    *) fail "Unsupported platform" ;;
+  esac
 
-  local download_url="https://github.com/denoland/deno/releases/download/v${version}/deno_${platform}_x64.gz"
+  local architecture
+
+  case "$(uname -m)" in
+    x86_64) architecture="x64" ;;
+    *) fail "Unsupported architecture" ;;
+  esac
+
+  local download_url="https://github.com/denoland/deno/releases/download/v${version}/deno_${platform}_${architecture}.gz"
 
   (
     echo "∗ Downloading and installing deno..."
