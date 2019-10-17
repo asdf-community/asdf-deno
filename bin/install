@@ -43,12 +43,14 @@ function install_deno() {
   esac
 
   local download_url="https://github.com/denoland/deno/releases/download/v${version}/deno_${platform}_${architecture}.gz"
+  local source_path="${install_path}/bin/deno.gz"
 
   (
     echo "∗ Downloading and installing deno..."
-    curl --silent --location --create-dirs --output "${install_path}/bin/deno.gz" "$download_url" || fail "Could not download deno $version"
-    gzip -d "${install_path}/bin/deno.gz" || fail "Could not uncompress"
-    chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed deno binary"
+    curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download"
+    gzip -d "$source_path" || fail "Could not uncompress"
+    chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed binary"
+    rm "$source_path"
     echo "The installation was successful!"
   ) || (
     rm -rf "$install_path"
