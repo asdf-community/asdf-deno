@@ -10,6 +10,13 @@ Deno plugin for asdf version manager
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![License](https://img.shields.io/github/license/asdf-community/asdf-deno?color=brightgreen)](https://github.com/asdf-community/asdf-deno/blob/master/LICENSE)
 
+## Prerequirements
+
+- Make sure you have the required dependencies installed:
+  - curl
+  - git
+  - gunzip
+
 ## Installation
 
 ```bash
