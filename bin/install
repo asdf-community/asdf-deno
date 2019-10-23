@@ -48,7 +48,7 @@ function install_deno() {
   (
     echo "∗ Downloading and installing deno..."
     curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download"
-    gzip -d "$source_path" || fail "Could not uncompress"
+    gunzip "$source_path" || fail "Could not uncompress"
     chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed binary"
     echo "The installation was successful!"
   ) || (
