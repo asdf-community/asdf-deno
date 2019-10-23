@@ -18,7 +18,7 @@ jobs:
       - name: Install asdf
         run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
 
-      - name: Install Deno and run test
+      - name: Install Deno and print deno version
         run: |
           . $HOME/asdf/asdf.sh
           asdf plugin-add deno $GITHUB_WORKSPACE
@@ -26,8 +26,27 @@ jobs:
           asdf global deno ${{ matrix.deno }}
           deno --version
 
-  shellcheck:
+  test:
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install asdf
+        run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
+
+      - name: Test plugin
+        env:
+          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          . $HOME/asdf/asdf.sh
+          asdf plugin-add deno $GITHUB_WORKSPACE
+          bats test
+
+  lint:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v1
       - name: Run ShellCheck
