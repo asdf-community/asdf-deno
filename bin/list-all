@@ -31,4 +31,4 @@ function sort_versions() {
 
 versions=$(eval "$cmd $releases_path" | grep 'tag_name' | sed -e 's/.* "v//;s/",//' | sort_versions)
 
-echo $versions
+echo "$versions"
