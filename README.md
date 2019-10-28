@@ -1,6 +1,6 @@
 <div align="center">
 <h1>asdf-deno 📦</h1>
-Deno plugin for asdf version manager
+<span><a href="https://deno.land">Deno</a> plugin for asdf version manager</span>
 </div>
 <hr />
 
