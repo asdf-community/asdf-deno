@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "imbsky",
+      "name": "BSKY",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/38746192?v=4",
+      "profile": "https://bsky.moe",
+      "contributions": [
+        "code",
+        "doc",
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "asdf-deno",
+  "projectOwner": "asdf-community",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
