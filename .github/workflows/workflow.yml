@@ -1,13 +1,16 @@
 name: Main workflow
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 5"
 
 jobs:
   build:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        deno: [0.2.9, 0.24.0]
 
     runs-on: ${{ matrix.os }}
 
@@ -22,9 +25,9 @@ jobs:
         run: |
           . $HOME/asdf/asdf.sh
           asdf plugin-add deno $GITHUB_WORKSPACE
-          asdf install deno ${{ matrix.deno }}
-          asdf global deno ${{ matrix.deno }}
-          deno --version
+          asdf install deno latest
+        env:
+          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     runs-on: macOS-latest
