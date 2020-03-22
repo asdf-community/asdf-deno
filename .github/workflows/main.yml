@@ -26,7 +26,7 @@ jobs:
           command: gh --version
 
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
