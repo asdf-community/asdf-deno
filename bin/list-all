@@ -7,11 +7,18 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/fns.bash"
 
 list_all_urls() {
   # shellcheck disable=SC2046
-  wget -qO- $([ -n "${GITHUB_API_TOKEN-}" ] && echo "--header 'Authorization: token $GITHUB_API_TOKEN'") https://api.github.com/repos/cli/cli/releases | jq -r '.[].assets[].browser_download_url' | tac
+  wget -qO- $([ -n "${GITHUB_API_TOKEN-}" ] && echo "--header 'Authorization: token $GITHUB_API_TOKEN'") https://api.github.com/repos/cli/cli/releases | jq -r '.[].assets[].browser_download_url'
 }
 
 filter_usable_releases() {
   (grep "https://github.com/cli/cli/releases/download/v[0-9.]\+/gh_[0-9.]\+_$(cli_platform)_$(cli_arch).tar.gz" || true)
+}
+
+# I'd use tac, but that's not on macOS by default
+# From https://github.com/vic/asdf-idris/blob/a27f835d086e8414a5a251d1b43a785d3816fa41/bin/list-all#L6
+sort_versions() {
+  sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
+    LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
 
 extract_version_from_url() {
@@ -19,7 +26,7 @@ extract_version_from_url() {
 }
 
 list_all_in_lines() {
-  list_all_urls | filter_usable_releases | extract_version_from_url
+  list_all_urls | filter_usable_releases | extract_version_from_url | sort_versions
 }
 
 list_all() {
