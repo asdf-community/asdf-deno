@@ -14,6 +14,11 @@ cli_platform() {
 }
 
 cli_arch() {
+  if [ "$(cli_platform)" = 'macOS' ]; then
+    echo amd64
+    return 0
+  fi
+
   case "$(arch)" in
     arm64) echo arm64 ;;
     *64) echo amd64 ;;
