@@ -29,6 +29,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - uses: mig4/setup-bats@master
       - uses: actions/checkout@v2
       - run: bats test
 
