@@ -11,7 +11,7 @@ list_all_urls() {
 }
 
 filter_usable_releases() {
-  (grep -P "https://github.com/cli/cli/releases/download/v[0-9.]+/gh_[0-9.]+_$(cli_platform)_$(cli_arch).tar.gz" || true)
+  (grep "https://github.com/cli/cli/releases/download/v[0-9.]\+/gh_[0-9.]\+_$(cli_platform)_$(cli_arch).tar.gz" || true)
 }
 
 extract_version_from_url() {
