@@ -7,7 +7,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/fns.bash"
 
 list_all_urls() {
   # shellcheck disable=SC2046
-  wget -qO- $([ -n "${GITHUB_API_TOKEN:-''}" ] && echo "--header 'Authorization: token $GITHUB_API_TOKEN'") https://api.github.com/repos/cli/cli/releases | jq -r '.[].assets[].browser_download_url' | tac
+  wget -qO- $([ -n "${GITHUB_API_TOKEN-}" ] && echo "--header 'Authorization: token $GITHUB_API_TOKEN'") https://api.github.com/repos/cli/cli/releases | jq -r '.[].assets[].browser_download_url' | tac
 }
 
 filter_usable_releases() {
