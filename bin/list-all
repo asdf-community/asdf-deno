@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # shellcheck source=bin/lib/fns.bash
-source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/lib/fns.bash"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/fns.bash"
 
 list_all_urls() {
   # shellcheck disable=SC2046

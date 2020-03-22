@@ -3,9 +3,9 @@
 set -euo pipefail
 
 # shellcheck source=bin/lib/fns.bash
-source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/lib/fns.bash"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/fns.bash"
 # shellcheck source=bin/list-all
-source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/list-all"
+source "$(dirname "${BASH_SOURCE[0]}")/list-all"
 
 install() {
   local install_type=$1
