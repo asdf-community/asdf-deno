@@ -1,0 +1,40 @@
+name: main
+
+on:
+  push:
+    paths-ignore:
+      - "LICENSE"
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - "LICENSE"
+      - "**.md"
+  schedule:
+    - cron: "0 0 * * 5"
+
+jobs:
+  smoke_run:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: asdf-vm/actions/plugin-test@v1.0.0
+        with:
+          command: gh --version
+
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: bats test
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: shellcheck $(find bin/* -type f)

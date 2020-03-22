@@ -2,48 +2,39 @@
 
 set -euo pipefail
 
-fail() {
-  echo -e "\e[31mFail:\e[m $*"
-  exit 1
-}
+# shellcheck source=bin/lib/fns.bash
+source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/lib/fns.bash"
+# shellcheck source=bin/list-all
+source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/list-all"
 
-install_deno() {
+install() {
   local install_type=$1
+  [ "$install_type" = "version" ] || fail "asdf-gh supports release installs only"
+
   local version=$2
+  [ "$version" = "latest" ] && version="$(list_all_in_lines | tail -n 1)"
+
+  local download_url
+  download_url="https://github.com/cli/cli/releases/download/v${version}/gh_${version}_$(cli_platform)_$(cli_arch).tar.gz"
+
+  echo "Downloading gh version ${version} from ${download_url}"
+
   local install_path=$3
-
-  if [ "$install_type" != "version" ]; then
-    fail "asdf-deno supports release installs only"
-  fi
-
-  local platform
-
-  case "$OSTYPE" in
-    darwin*) platform="osx" ;;
-    linux*) platform="linux" ;;
-    *) fail "Unsupported platform" ;;
-  esac
-
-  local architecture
-
-  case "$(uname -m)" in
-    x86_64) architecture="x64" ;;
-    *) fail "Unsupported architecture" ;;
-  esac
-
-  local download_url="https://github.com/denoland/deno/releases/download/v${version}/deno_${platform}_${architecture}.gz"
-  local source_path="${install_path}/bin/deno.gz"
-
   (
-    echo "∗ Downloading and installing deno..."
-    curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download"
-    gunzip "$source_path" || fail "Could not uncompress"
-    chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed binary"
-    echo "The installation was successful!"
+    (
+      wget -qO- "$download_url" |
+        tar -C "$install_path" --strip-components=1 -xz
+    ) || fail "Could not download or extract"
+
+    (
+      chmod +x "${install_path}/bin/gh"
+    ) || fail "Could not find uncompressed binary"
   ) || (
     rm -rf "$install_path"
     fail "An error occurred"
   )
 }
 
-install_deno "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  install "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+fi

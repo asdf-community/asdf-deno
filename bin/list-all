@@ -2,16 +2,29 @@
 
 set -euo pipefail
 
-sort_versions() {
-  sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
-    LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
+# shellcheck source=bin/lib/fns.bash
+source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/lib/fns.bash"
+
+list_all_urls() {
+  wget -qO- https://api.github.com/repos/cli/cli/releases | jq -r '.[].assets[].browser_download_url' | tac
 }
 
-list_all_versions() {
-  git ls-remote --tags --refs https://github.com/denoland/deno.git |
-    grep -o 'refs/tags/.*' |
-    cut -d/ -f3- |
-    sed 's/^v//'
+filter_usable_releases() {
+  (grep -P "https://github.com/cli/cli/releases/download/v[0-9.]+/gh_[0-9.]+_$(cli_platform)_$(cli_arch).tar.gz" || true)
 }
 
-list_all_versions | sort_versions | xargs echo
+extract_version_from_url() {
+  cut -d / -f 8 | cut -c2-
+}
+
+list_all_in_lines() {
+  list_all_urls | filter_usable_releases | extract_version_from_url
+}
+
+list_all() {
+  list_all_in_lines | xargs echo
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  list_all
+fi
