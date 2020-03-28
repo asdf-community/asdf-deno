@@ -11,7 +11,7 @@ git clone -q https://github.com/asdf-vm/asdf.git $ASDF_DIR
 
 setup() {
   . $ASDF_DIR/asdf.sh
-  asdf plugin add gh "$(realpath $PWD)"
+  asdf plugin add gh "$PWD"
 }
 
 teardown() {
