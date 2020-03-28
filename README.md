@@ -25,7 +25,7 @@ instructions on how to install & manage versions.
 
 ## Contributors
 
-Froked from [asdf-deno](https://github.com/asdf-community/asdf-deno).
+Forked from [asdf-deno](https://github.com/asdf-community/asdf-deno).
 
 ## License
 
