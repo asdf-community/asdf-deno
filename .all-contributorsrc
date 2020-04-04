@@ -25,6 +25,16 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "uki00a",
+      "name": "uki00a",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/35212662?v=4",
+      "profile": "https://scrapbox.io/uki00a/uki00a",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
