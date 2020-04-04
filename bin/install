@@ -58,7 +58,7 @@ install_deno() {
 
     archive_format="zip"
     archive_file="deno-${architecture}-${platform}.${archive_format}"
-    uncompress_command="unzip"
+    uncompress_command="unzip -d ${install_path}/bin"
   fi
 
   local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
@@ -67,7 +67,7 @@ install_deno() {
   (
     echo "∗ Downloading and installing deno..."
     curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download"
-    "$uncompress_command" "$source_path" || fail "Could not uncompress"
+    $uncompress_command $source_path || fail "Could not uncompress"
     chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed binary"
     echo "The installation was successful!"
   ) || (
