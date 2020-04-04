@@ -17,27 +17,52 @@ install_deno() {
   fi
 
   local platform
-
-  case "$OSTYPE" in
-    darwin*) platform="osx" ;;
-    linux*) platform="linux" ;;
-    *) fail "Unsupported platform" ;;
-  esac
-
   local architecture
+  local archive_format
+  local uncompress_command
+  local archive_file
 
-  case "$(uname -m)" in
-    x86_64) architecture="x64" ;;
-    *) fail "Unsupported architecture" ;;
-  esac
+  local version_as_number
+  version_as_number=$(echo "$version" | tr -d .)
+  if [ "$version_as_number" -le 0350 ]; then
+    case "$OSTYPE" in
+      darwin*) platform="osx" ;;
+      linux*) platform="linux" ;;
+      *) fail "Unsupported platform" ;;
+    esac
 
-  local download_url="https://github.com/denoland/deno/releases/download/v${version}/deno_${platform}_${architecture}.gz"
-  local source_path="${install_path}/bin/deno.gz"
+    case "$(uname -m)" in
+      x86_64) architecture="x64" ;;
+      *) fail "Unsupported architecture" ;;
+    esac
+
+    archive_format="gz"
+    archive_file="deno_${platform}_${architecture}.${archive_format}"
+    uncompress_command="gunzip"
+  else
+    case "$OSTYPE" in
+      darwin*) platform="apple-darwin" ;;
+      linux*) platform="unknown-linux-gnu" ;;
+      *) fail "Unsupported platform" ;;
+    esac
+
+    case "$(uname -m)" in
+      x86_64) architecture="x86_64" ;;
+      *) fail "Unsupported architecture" ;;
+    esac
+
+    archive_format="zip"
+    archive_file="deno-${architecture}-${platform}.${archive_format}"
+    uncompress_command="unzip -d ${install_path}/bin"
+  fi
+
+  local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
+  local source_path="${install_path}/bin/deno.${archive_format}"
 
   (
     echo "∗ Downloading and installing deno..."
     curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download"
-    gunzip "$source_path" || fail "Could not uncompress"
+    $uncompress_command "$source_path" || fail "Could not uncompress"
     chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed binary"
     echo "The installation was successful!"
   ) || (
