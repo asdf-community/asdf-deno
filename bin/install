@@ -2,13 +2,6 @@
 
 set -euo pipefail
 
-semver_lte() {
-  local ver1=$1
-  local ver2=$2
-  printf "%s\n%s" "$ver1" "$ver2" | sort --check=silent
-  return $?
-}
-
 fail() {
   echo -e "\e[31mFail:\e[m $*"
   exit 1
@@ -29,7 +22,8 @@ install_deno() {
   local uncompress_command
   local archive_file
 
-  if semver_lte "$version" "0.35.0"; then
+  local version_as_number=$(echo "$version" | tr -d .)
+  if [ "$version_as_number" -le 0350 ]; then
     case "$OSTYPE" in
       darwin*) platform="osx" ;;
       linux*) platform="linux" ;;
