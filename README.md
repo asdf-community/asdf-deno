@@ -14,7 +14,8 @@
 - Make sure you have the required dependencies installed:
   - curl
   - git
-  - gunzip
+  - gunzip (for installing v0.35.0 or lower)
+  - unzip (for installing v0.36.0 or higher)
 
 ## Installation
 
