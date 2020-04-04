@@ -22,7 +22,8 @@ install_deno() {
   local uncompress_command
   local archive_file
 
-  local version_as_number=$(echo "$version" | tr -d .)
+  local version_as_number
+  version_as_number=$(echo "$version" | tr -d .)
   if [ "$version_as_number" -le 0350 ]; then
     case "$OSTYPE" in
       darwin*) platform="osx" ;;
