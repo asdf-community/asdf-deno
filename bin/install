@@ -3,7 +3,7 @@
 set -euo pipefail
 
 fail() {
-  echo -e "\e[31mFail:\e[m $*"
+  echo -e "\033[31mFail:\033[m $*"
   exit 1
 }
 
@@ -22,24 +22,7 @@ install_deno() {
   local uncompress_command
   local archive_file
 
-  local version_as_number
-  version_as_number=$(echo "$version" | tr -d .)
-  if [ "$version_as_number" -le 0350 ]; then
-    case "$OSTYPE" in
-      darwin*) platform="osx" ;;
-      linux*) platform="linux" ;;
-      *) fail "Unsupported platform" ;;
-    esac
-
-    case "$(uname -m)" in
-      x86_64) architecture="x64" ;;
-      *) fail "Unsupported architecture" ;;
-    esac
-
-    archive_format="gz"
-    archive_file="deno_${platform}_${architecture}.${archive_format}"
-    uncompress_command="gunzip"
-  else
+  if [[ $version > "0.35.0" ]]; then
     case "$OSTYPE" in
       darwin*) platform="apple-darwin" ;;
       linux*) platform="unknown-linux-gnu" ;;
@@ -54,6 +37,21 @@ install_deno() {
     archive_format="zip"
     archive_file="deno-${architecture}-${platform}.${archive_format}"
     uncompress_command="unzip -d ${install_path}/bin"
+  else
+    case "$OSTYPE" in
+      darwin*) platform="osx" ;;
+      linux*) platform="linux" ;;
+      *) fail "Unsupported platform" ;;
+    esac
+
+    case "$(uname -m)" in
+      x86_64) architecture="x64" ;;
+      *) fail "Unsupported architecture" ;;
+    esac
+
+    archive_format="gz"
+    archive_file="deno_${platform}_${architecture}.${archive_format}"
+    uncompress_command="gunzip"
   fi
 
   local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
