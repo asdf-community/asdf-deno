@@ -11,7 +11,8 @@ list_all_versions() {
   git ls-remote --tags --refs https://github.com/denoland/deno.git |
     grep -o 'refs/tags/.*' |
     cut -d/ -f3- |
-    sed 's/^v//'
+    sed 's/^v//' |
+    sed '/std/d'
 }
 
 list_all_versions | sort_versions | xargs echo
