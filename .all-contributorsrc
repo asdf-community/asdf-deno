@@ -35,6 +35,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "homburg",
+      "name": "Thomas B Homburg",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/235886?v=4",
+      "profile": "https://github.com/homburg",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
