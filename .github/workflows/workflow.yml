@@ -3,14 +3,14 @@ name: Main workflow
 on:
   push:
     paths-ignore:
+      - .all-contributorsrc
       - "**.md"
-      - ".all-contributorsrc"
   pull_request:
     paths-ignore:
+      - .all-contributorsrc
       - "**.md"
-      - ".all-contributorsrc"
   schedule:
-    - cron: "0 0 * * 5"
+    - cron: 0 0 * * 5
 
 jobs:
   plugin_test:
