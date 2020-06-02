@@ -62,6 +62,7 @@ install_deno() {
     curl --silent --location --create-dirs --output "$source_path" "$download_url" || fail "Could not download"
     $uncompress_command "$source_path" || fail "Could not uncompress"
     chmod +x "${install_path}/bin/deno" || fail "Could not find uncompressed binary"
+    mkdir "${install_path}/.deno" || fail "Could not create deno install root directory"
     echo "The installation was successful!"
   ) || (
     rm -rf "$install_path"
