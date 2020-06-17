@@ -1,8 +1,8 @@
-<div align="center">
-<h1>asdf-deno</h1>
-<span><a href="https://deno.land">Deno</a> plugin for asdf version manager</span>
-</div>
-<hr />
+# asdf-deno
+
+[Deno](https://deno.land) plugin for asdf version manager
+
+## Build History
 
 [![Build history](https://buildstats.info/github/chart/asdf-community/asdf-deno?branch=master)](https://github.com/asdf-community/asdf-deno/actions)
 
