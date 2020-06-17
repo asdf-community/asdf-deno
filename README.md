@@ -4,9 +4,7 @@
 </div>
 <hr />
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/asdf-community/asdf-deno/Main%20workflow?style=flat-square)](https://github.com/asdf-community/asdf-deno/actions)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![License](https://img.shields.io/github/license/asdf-community/asdf-deno?style=flat-square&color=brightgreen)](https://github.com/asdf-community/asdf-deno/blob/master/LICENSE)
+[![Build history](https://buildstats.info/github/chart/asdf-community/asdf-deno?branch=master)](https://github.com/asdf-community/asdf-deno/actions)
 
 ## Prerequirements
 
