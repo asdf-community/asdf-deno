@@ -31,8 +31,15 @@ install_deno() {
 
     case "$(uname -m)" in
       x86_64) architecture="x86_64" ;;
+      arm64) architecture="aarch64" ;;
       *) fail "Unsupported architecture" ;;
     esac
+    
+    if [ $architecture = "aarch64" ]; then
+      if [[ $version < "1.6.0" ]] || [ $platform != "apple-darwin" ]; then
+        fail "Unsupported architecture"
+      fi
+    fi
 
     archive_format="zip"
     archive_file="deno-${architecture}-${platform}.${archive_format}"
