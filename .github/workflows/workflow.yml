@@ -1,14 +1,8 @@
 name: Main workflow
 
 on:
-  push:
-    paths-ignore:
-      - .all-contributorsrc
-      - "**.md"
   pull_request:
-    paths-ignore:
-      - .all-contributorsrc
-      - "**.md"
+  push:
   schedule:
     - cron: 0 0 * * 5
 
@@ -16,7 +10,9 @@ jobs:
   plugin_test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os:
+          - macos-latest
+          - ubuntu-latest
 
     runs-on: ${{ matrix.os }}
 
