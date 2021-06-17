@@ -74,6 +74,7 @@ install_deno() {
   $uncompress_command "$source_path"
   chmod +x "${install_path}/bin/deno"
   mkdir "${install_path}/.deno"
+  rm "$source_path"
   echo "The installation was successful!"
 }
 
