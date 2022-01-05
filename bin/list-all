@@ -9,9 +9,8 @@ sort_versions() {
 
 list_all_versions() {
   curl -H "Accept: application/vnd.github.v3+json" 'https://api.github.com/repos/denoland/deno/releases?per_page=100' |
-    grep '"name": "v' |
-    sed 's/"name": "v\(.*\)",/\1/' |
-    sed 's/^[ \t]*//'
+    grep -o '"name": "v.*' |
+    sed 's/"name": "v\(.*\)",/\1/'
 }
 
 list_all_versions | sort_versions | xargs echo
