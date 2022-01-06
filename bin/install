@@ -8,13 +8,13 @@ cleanup() {
   trap - SIGINT SIGTERM ERR
   rm -rf "$ASDF_INSTALL_PATH"
   echo
-  echo -e "\e[33mCleanup:\e[m Something went wrong!"
+  echo -e "Cleanup: Something went wrong!"
   echo
   echo "$(caller): ${BASH_COMMAND}"
 }
 
 fail() {
-  echo -e "\033[31mFail:\033[m $*"
+  echo -e "Fail: $*"
   exit 1
 }
 
@@ -69,7 +69,7 @@ install_deno() {
   local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
   local source_path="${install_path}/bin/deno.${archive_format}"
 
-  echo "∗ Downloading and installing deno..."
+  echo "* Downloading and installing deno..."
   curl --fail --silent --location --create-dirs --output "$source_path" "$download_url"
   $uncompress_command "$source_path"
   chmod +x "${install_path}/bin/deno"
