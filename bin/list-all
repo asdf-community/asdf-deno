@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
+set -eo pipefail
+
+cmd="curl --silent --location"
+releases_path="https://api.github.com/repos/denoland/deno/releases?per_page=100"
+
+if [ -n "$GITHUB_API_TOKEN" ]; then
+  cmd="$cmd --header 'Authorization: token $GITHUB_API_TOKEN'"
+fi
 
 sort_versions() {
   sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
     LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
 
-list_all_versions() {
-  curl -H "Accept: application/vnd.github.v3+json" 'https://api.github.com/repos/denoland/deno/releases?per_page=100' |
+versions=$(
+  eval "$cmd $releases_path" |
     grep -o '"name": "v.*' |
-    sed 's/"name": "v\(.*\)",/\1/'
-}
+    sed 's/"name": "v\(.*\)",/\1/' |
+    sort_versions |
+    xargs
+)
 
-list_all_versions | sort_versions | xargs echo
+echo "$versions"
