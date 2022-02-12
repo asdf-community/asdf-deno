@@ -53,7 +53,6 @@ install_deno() {
   local archive_format
   local uncompress_command
   local archive_file
-  local source_path
 
   if [ "$install_type" == "version" ]; then
     if [[ $version > "0.35.0" ]]; then
@@ -90,9 +89,10 @@ install_deno() {
     fi
 
     local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
-    source_path="${install_path}/bin/deno.${archive_format}"
+    local source_path="${install_path}/bin/deno.${archive_format}"
     echo "* Downloading and installing deno..."
     install_from_archive "$source_path" "$download_url" "$uncompress_command"
+    rm "$source_path"
   else
     echo "* Building and installing deno..."
     install_from_source "$install_path" "$version"
@@ -100,9 +100,6 @@ install_deno() {
 
   chmod +x "${install_path}/bin/deno"
   mkdir "${install_path}/.deno"
-  if [ -f "$source_path" ]; then
-    rm "$source_path"
-  fi
   echo "The installation was successful!"
 }
 
