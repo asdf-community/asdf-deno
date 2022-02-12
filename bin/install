@@ -38,7 +38,7 @@ install_deno() {
   local install_path=$3
 
   if [ "$install_type" != "version" ]; then
-    if [ -z "$(command -v cargo)" ]; then
+    if [ -z "$(command -v cargo)" ] || ! cargo >/dev/null 2>&1; then
       fail "build from source ($version) require 'cargo' to be installed"
     fi
   fi
