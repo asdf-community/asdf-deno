@@ -29,7 +29,12 @@ install_from_archive() {
 install_from_source() {
   local install_path=$1
   local version=$2
-  cargo install --root "$1" --version "$2" deno --locked
+
+  if [ "$version" == "" ]; then
+    cargo install --root "$1" deno --locked
+  else
+    cargo install --root "$1" --version "$2" deno --locked
+  fi
 }
 
 install_deno() {
@@ -39,7 +44,7 @@ install_deno() {
 
   if [ "$install_type" != "version" ]; then
     if [ -z "$(command -v cargo)" ] || ! cargo >/dev/null 2>&1; then
-      fail "build from source ($version) require 'cargo' to be installed"
+      fail "build from source (${version:-latest}) require 'cargo' to be installed"
     fi
   fi
 
