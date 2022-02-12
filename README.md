@@ -13,6 +13,8 @@
   - git
   - gunzip (for v0.35.0 or lower)
   - unzip (for v0.36.0 or higher)
+- To build from source, you will need these dependencies:
+  - cargo (you can install it through [asdf-rust](https://github.com/asdf-community/asdf-rust))
 
 ## Installation
 

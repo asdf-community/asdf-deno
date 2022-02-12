@@ -24,7 +24,12 @@ install_deno() {
   local install_path=$3
 
   if [ "$install_type" != "version" ]; then
-    fail "asdf-deno supports release installs only"
+    if [ -n "$(command -v cargo)" ]; then
+      echo cargo install --root "$install_path" --version "$version" deno --locked
+      return
+    else
+      fail "build from source ($version) require 'cargo' to be installed"
+    fi
   fi
 
   local platform
