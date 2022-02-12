@@ -30,7 +30,7 @@ install_from_source() {
   local install_path=$1
   local version=$2
 
-  if [ "$version" == "" ]; then
+  if [ "$version" == "" ] || [ "$version" == "latest" ]; then
     cargo install --root "$1" deno --locked
   else
     cargo install --root "$1" --version "$2" deno --locked
