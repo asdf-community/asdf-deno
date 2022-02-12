@@ -18,16 +18,27 @@ fail() {
   exit 1
 }
 
+install_from_archive() {
+  local source_path=$1
+  local download_url=$2
+  local uncompress_command=$3
+  curl --fail --silent --location --create-dirs --output "$source_path" "$download_url"
+  $uncompress_command "$source_path"
+}
+
+install_from_source() {
+  local install_path=$1
+  local version=$2
+  cargo install --root "$1" --version "$2" deno --locked
+}
+
 install_deno() {
   local install_type=$1
   local version=$2
   local install_path=$3
 
   if [ "$install_type" != "version" ]; then
-    if [ -n "$(command -v cargo)" ]; then
-      echo cargo install --root "$install_path" --version "$version" deno --locked
-      return
-    else
+    if [ -z "$(command -v cargo)" ]; then
       fail "build from source ($version) require 'cargo' to be installed"
     fi
   fi
@@ -37,49 +48,56 @@ install_deno() {
   local archive_format
   local uncompress_command
   local archive_file
+  local source_path
 
-  if [[ $version > "0.35.0" ]]; then
-    case "$OSTYPE" in
-      darwin*) platform="apple-darwin" ;;
-      linux*) platform="unknown-linux-gnu" ;;
-      *) fail "Unsupported platform" ;;
-    esac
+  if [ "$install_type" == "version" ]; then
+    if [[ $version > "0.35.0" ]]; then
+      case "$OSTYPE" in
+        darwin*) platform="apple-darwin" ;;
+        linux*) platform="unknown-linux-gnu" ;;
+        *) fail "Unsupported platform" ;;
+      esac
 
-    case "$(uname -m)" in
-      x86_64) architecture="x86_64" ;;
-      arm64) architecture="aarch64" ;;
-      *) fail "Unsupported architecture" ;;
-    esac
+      case "$(uname -m)" in
+        x86_64) architecture="x86_64" ;;
+        arm64) architecture="aarch64" ;;
+        *) fail "Unsupported architecture" ;;
+      esac
 
-    archive_format="zip"
-    archive_file="deno-${architecture}-${platform}.${archive_format}"
-    uncompress_command="unzip -d ${install_path}/bin"
+      archive_format="zip"
+      archive_file="deno-${architecture}-${platform}.${archive_format}"
+      uncompress_command="unzip -d ${install_path}/bin"
+    else
+      case "$OSTYPE" in
+        darwin*) platform="osx" ;;
+        linux*) platform="linux" ;;
+        *) fail "Unsupported platform" ;;
+      esac
+
+      case "$(uname -m)" in
+        x86_64) architecture="x64" ;;
+        *) fail "Unsupported architecture" ;;
+      esac
+
+      archive_format="gz"
+      archive_file="deno_${platform}_${architecture}.${archive_format}"
+      uncompress_command="gunzip"
+    fi
+
+    local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
+    source_path="${install_path}/bin/deno.${archive_format}"
+    echo "* Downloading and installing deno..."
+    install_from_archive "$source_path" "$download_url" "$uncompress_command"
   else
-    case "$OSTYPE" in
-      darwin*) platform="osx" ;;
-      linux*) platform="linux" ;;
-      *) fail "Unsupported platform" ;;
-    esac
-
-    case "$(uname -m)" in
-      x86_64) architecture="x64" ;;
-      *) fail "Unsupported architecture" ;;
-    esac
-
-    archive_format="gz"
-    archive_file="deno_${platform}_${architecture}.${archive_format}"
-    uncompress_command="gunzip"
+    echo "* Building and installing deno..."
+    install_from_source "$install_path" "$version"
   fi
 
-  local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
-  local source_path="${install_path}/bin/deno.${archive_format}"
-
-  echo "* Downloading and installing deno..."
-  curl --fail --silent --location --create-dirs --output "$source_path" "$download_url"
-  $uncompress_command "$source_path"
   chmod +x "${install_path}/bin/deno"
   mkdir "${install_path}/.deno"
-  rm "$source_path"
+  if [ -f "$source_path" ]; then
+    rm "$source_path"
+  fi
   echo "The installation was successful!"
 }
 
