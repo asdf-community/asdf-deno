@@ -27,6 +27,28 @@ asdf plugin-add deno https://github.com/asdf-community/asdf-deno.git
 Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to
 install & manage versions.
 
+### Install from source
+
+Rust's cargo is needed in order to install from the source.
+
+#### Install specific version
+
+To install specific version from source, use
+
+```bash
+asdf install deno ref:<version>
+```
+
+To install the latest version, run `asdf install deno ref:latest`
+
+#### Install specific version by git commit
+
+To install specific version by git commit from source, use
+
+```bash
+asdf install deno ref:<full-commit-hash>
+```
+
 ## License
 
 Licensed under the
