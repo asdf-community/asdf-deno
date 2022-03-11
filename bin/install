@@ -4,6 +4,8 @@ set -Eeuo pipefail
 
 trap cleanup SIGINT SIGTERM ERR
 
+deno_git="https://github.com/denoland/deno"
+
 cleanup() {
   trap - SIGINT SIGTERM ERR
   rm -rf "$ASDF_INSTALL_PATH"
@@ -28,12 +30,14 @@ install_from_archive() {
 
 install_from_source() {
   local install_path=$1
-  local version=$2
+  local ref=$2
 
-  if [ "$version" == "" ] || [ "$version" == "latest" ]; then
-    cargo install --root "$1" deno --locked
+  if [ -z "$ref" ] || [ "$ref" == "latest" ]; then
+    cargo install --root "$install_path" deno --locked
+  elif [ "$(wc -c "$ref")" -eq 40 ]; then
+    cargo install --root "$install_path" --git "$deno_git" --rev "$ref" deno --locked
   else
-    cargo install --root "$1" --version "$2" deno --locked
+    cargo install --root "$install_path" --version "$ref" deno --locked
   fi
 }
 
