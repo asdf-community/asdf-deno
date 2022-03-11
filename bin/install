@@ -34,7 +34,7 @@ install_from_source() {
 
   if [ -z "$ref" ] || [ "$ref" == "latest" ]; then
     cargo install --root "$install_path" deno --locked
-  elif [ "$(wc -c "$ref")" -eq 40 ]; then
+  elif [ "$(printf "$ref" | wc -c)" -eq 40 ]; then
     cargo install --root "$install_path" --git "$deno_git" --rev "$ref" deno --locked
   else
     cargo install --root "$install_path" --version "$ref" deno --locked
