@@ -39,7 +39,7 @@ To install specific version from source, use
 asdf install deno ref:<version>
 ```
 
-To install the latest version, run `asdf install deno ref:latest`
+To install the latest version from source, run `asdf install deno ref:latest`
 
 #### Install specific version by git commit
 
