@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT:-}
+
 if [ "$ASDF_INSTALL_VERSION" != "system" ]; then
   if [ -z "$DENO_INSTALL_ROOT" ]; then
     export DENO_INSTALL_ROOT=$ASDF_INSTALL_PATH/.deno
