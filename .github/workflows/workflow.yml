@@ -37,6 +37,12 @@ jobs:
       - name: Install bats-core
         run: brew install bats-core
 
+      - name: Remove rust's cargo (if any)
+        run: |
+          if test -n "$(command -v cargo)"; then
+            rm -f $(command -v cargo)
+          fi
+
       - name: Test plugin
         run: |
           asdf plugin-add deno $GITHUB_WORKSPACE
