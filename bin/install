@@ -43,7 +43,7 @@ install_deno() {
 
     case "$(uname -m)" in
       x86_64) architecture="x86_64" ;;
-      arm64) architecture="aarch64" ;;
+      aarch64 | arm64) architecture="aarch64" ;;
       *) fail "Unsupported architecture" ;;
     esac
 
