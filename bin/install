@@ -37,6 +37,7 @@ install_deno() {
     case "$OSTYPE" in
       darwin*) platform="apple-darwin" ;;
       linux*) platform="unknown-linux-gnu" ;;
+      msys*) platform="pc-windows-msvc" ;;
       *) fail "Unsupported platform" ;;
     esac
 
