@@ -21,8 +21,6 @@ jobs:
         uses: asdf-vm/actions/plugin-test@v1
         with:
           command: deno --version
-        env:
-          GITHUB_API_TOKEN: ${{ github.token }}
 
   test:
     runs-on: ubuntu-latest
