@@ -33,6 +33,8 @@ install_deno() {
   local uncompress_command
   local archive_file
 
+  local download_url="https://github.com/denoland/deno/releases/download"
+
   if [[ $version > "0.35.0" ]]; then
     case "$OSTYPE" in
       darwin*) platform="apple-darwin" ;;
@@ -50,6 +52,10 @@ install_deno() {
     archive_format="zip"
     archive_file="deno-${architecture}-${platform}.${archive_format}"
     uncompress_command="unzip -d ${install_path}/bin"
+
+    if ! [[ $version < "1.0.1" ]] || [[ $version = "1.0.0" ]]; then
+      download_url="https://dl.deno.land/release"
+    fi
   else
     case "$OSTYPE" in
       darwin*) platform="osx" ;;
@@ -67,7 +73,7 @@ install_deno() {
     uncompress_command="gunzip"
   fi
 
-  local download_url="https://github.com/denoland/deno/releases/download/v${version}/${archive_file}"
+  download_url="${download_url}/v${version}/${archive_file}"
   local source_path="${install_path}/bin/deno.${archive_format}"
 
   echo "* Downloading and installing deno..."
