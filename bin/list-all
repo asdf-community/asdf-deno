@@ -3,11 +3,7 @@
 set -eo pipefail
 
 cmd="curl --silent --location"
-releases_path="https://api.github.com/repos/denoland/deno/releases?per_page=100"
-
-if [ -n "$GITHUB_API_TOKEN" ]; then
-  cmd="$cmd --header 'Authorization: token $GITHUB_API_TOKEN'"
-fi
+versions_url="https://deno.com/versions.json"
 
 sort_versions() {
   sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
@@ -15,9 +11,10 @@ sort_versions() {
 }
 
 versions=$(
-  eval "$cmd $releases_path" |
-    grep -o '"name": "v.*' |
-    sed 's/"name": "v\(.*\)",/\1/' |
+  eval "$cmd $versions_url" |
+    sed -n 's/.*"cli":\[\(.*\)\].*/\1/p' |    # Extract everything inside "cli": [ ... ]
+    grep -o '"v[0-9.]\+\(-rc\.[0-9]\+\)\?"' | # Extract all versions
+    sed 's/"v\(.*\)"/\1/' |                   # Remove the "v" prefix and quotes
     sort_versions |
     xargs
 )
