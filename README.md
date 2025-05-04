@@ -17,7 +17,7 @@
 ## Installation
 
 ```bash
-asdf plugin-add deno https://github.com/asdf-community/asdf-deno.git
+asdf plugin add deno https://github.com/asdf-community/asdf-deno.git
 ```
 
 ## Usage
