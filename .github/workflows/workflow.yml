@@ -34,6 +34,10 @@ jobs:
       - name: Setup asdf
         uses: asdf-vm/actions/setup@v1
 
+      - name: Setup Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
       - name: Install bats-core
         run: brew install bats-core
 
@@ -49,6 +53,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
       - name: Install ShellCheck
         run: brew install shellcheck
 
@@ -61,6 +69,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Setup Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install shfmt
         run: brew install shfmt
