@@ -1,10 +1,8 @@
 # asdf-deno
 
+[![Builds, tests & co](https://github.com/asdf-community/asdf-deno/actions/workflows/workflow.yml/badge.svg)](https://github.com/asdf-community/asdf-deno/actions/workflows/workflow.yml)
+
 [Deno](https://deno.land) plugin for asdf version manager
-
-## Build History
-
-[![Build history](https://buildstats.info/github/chart/asdf-community/asdf-deno?branch=master)](https://github.com/asdf-community/asdf-deno/actions)
 
 ## Prerequirements
 
@@ -22,10 +20,8 @@ asdf plugin add deno https://github.com/asdf-community/asdf-deno.git
 
 ## Usage
 
-Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to
-install & manage versions.
+Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to install & manage versions.
 
 ## License
 
-Licensed under the
-[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
