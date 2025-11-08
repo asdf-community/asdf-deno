@@ -24,6 +24,7 @@ jobs:
         uses: asdf-vm/actions/plugin-test@v4
         with:
           command: deno --version
+          gitref: ${{ github.head_ref }}
 
   test:
     runs-on: ubuntu-latest
