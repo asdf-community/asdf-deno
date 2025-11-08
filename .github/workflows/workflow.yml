@@ -3,6 +3,8 @@ name: Builds, tests & co
 on:
   pull_request:
   push:
+    branches:
+      - main
   schedule:
     - cron: 0 0 * * 5
 
