@@ -11,8 +11,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-latest
           - ubuntu-latest
+          - macos-latest
 
     runs-on: ${{ matrix.os }}
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Test plugin
         run: |
-          asdf plugin-add deno $GITHUB_WORKSPACE
+          asdf plugin add deno $GITHUB_WORKSPACE
           make test
 
   lint:
