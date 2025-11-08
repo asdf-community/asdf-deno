@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
+set -euo pipefail
 
-cmd="curl --silent --location"
-versions_url="https://deno.com/versions.json"
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+source "${plugin_dir}/lib/utils.bash"
 
-sort_versions() {
-  sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
-    LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
-}
-
-versions=$(
-  eval "$cmd $versions_url" |
-    sed -n 's/.*"cli":\[\(.*\)\].*/\1/p' |    # Extract everything inside "cli": [ ... ]
-    grep -o '"v[0-9.]\+\(-rc\.[0-9]\+\)\?"' | # Extract all versions
-    sed 's/"v\(.*\)"/\1/' |                   # Remove the "v" prefix and quotes
-    sort_versions |
-    xargs
-)
-
-echo "$versions"
+list_all_versions | sort_versions | xargs echo

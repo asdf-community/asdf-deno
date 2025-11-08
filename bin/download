@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+source "${plugin_dir}/lib/utils.bash"
+
+mkdir -p "$ASDF_DOWNLOAD_PATH"
+
+# Determine the archive format based on version
+if [[ $ASDF_INSTALL_VERSION > "0.35.0" ]]; then
+  release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME.zip"
+else
+  release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME.gz"
+fi
+
+# Download the release file
+download_release "$ASDF_INSTALL_VERSION" "$release_file"
+
+# Extract the binary
+if [[ $ASDF_INSTALL_VERSION > "0.35.0" ]]; then
+  unzip -q "$release_file" -d "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file"
+else
+  gunzip "$release_file" || fail "Could not extract $release_file"
+  mv "$ASDF_DOWNLOAD_PATH/$TOOL_NAME" "$ASDF_DOWNLOAD_PATH/deno"
+fi
+
+# Make the binary executable
+chmod +x "$ASDF_DOWNLOAD_PATH/deno"
+
+# Remove the archive file since we don't need to keep it
+rm -f "$release_file"

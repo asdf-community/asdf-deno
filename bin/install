@@ -1,88 +1,9 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
+set -euo pipefail
 
-trap cleanup SIGINT SIGTERM ERR
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+source "${plugin_dir}/lib/utils.bash"
 
-cleanup() {
-  trap - SIGINT SIGTERM ERR
-  rm -rf "$ASDF_INSTALL_PATH"
-  echo
-  echo -e "Cleanup: Something went wrong!"
-  echo
-  echo "$(caller): ${BASH_COMMAND}"
-}
-
-fail() {
-  echo -e "Fail: $*"
-  exit 1
-}
-
-install_deno() {
-  local install_type=$1
-  local version=$2
-  local install_path=$3
-
-  if [ "$install_type" != "version" ]; then
-    fail "asdf-deno supports release installs only"
-  fi
-
-  local platform
-  local architecture
-  local archive_format
-  local uncompress_command
-  local archive_file
-
-  local download_url="https://github.com/denoland/deno/releases/download"
-
-  if [[ $version > "0.35.0" ]]; then
-    case "$OSTYPE" in
-      darwin*) platform="apple-darwin" ;;
-      linux*) platform="unknown-linux-gnu" ;;
-      msys*) platform="pc-windows-msvc" ;;
-      *) fail "Unsupported platform" ;;
-    esac
-
-    case "$(uname -m)" in
-      x86_64) architecture="x86_64" ;;
-      aarch64 | arm64) architecture="aarch64" ;;
-      *) fail "Unsupported architecture" ;;
-    esac
-
-    archive_format="zip"
-    archive_file="deno-${architecture}-${platform}.${archive_format}"
-    uncompress_command="unzip -d ${install_path}/bin"
-
-    if ! [[ $version < "1.0.1" ]] || [[ $version == "1.0.0" ]]; then
-      download_url="https://dl.deno.land/release"
-    fi
-  else
-    case "$OSTYPE" in
-      darwin*) platform="osx" ;;
-      linux*) platform="linux" ;;
-      *) fail "Unsupported platform" ;;
-    esac
-
-    case "$(uname -m)" in
-      x86_64) architecture="x64" ;;
-      *) fail "Unsupported architecture" ;;
-    esac
-
-    archive_format="gz"
-    archive_file="deno_${platform}_${architecture}.${archive_format}"
-    uncompress_command="gunzip"
-  fi
-
-  download_url="${download_url}/v${version}/${archive_file}"
-  local source_path="${install_path}/bin/deno.${archive_format}"
-
-  echo "* Downloading and installing deno..."
-  curl --fail --silent --location --create-dirs --output "$source_path" "$download_url"
-  $uncompress_command "$source_path"
-  chmod +x "${install_path}/bin/deno"
-  mkdir "${install_path}/.deno"
-  rm "$source_path"
-  echo "The installation was successful!"
-}
-
-install_deno "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+install_version "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"

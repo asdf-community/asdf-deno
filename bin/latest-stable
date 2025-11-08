@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+source "${plugin_dir}/lib/utils.bash"
+
+curl_opts=(-sI)
+
+if [ -n "${GITHUB_API_TOKEN:-}" ]; then
+  curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
+fi
+
+# curl of GH_REPO/releases/latest is expected to be a 302 to another URL
+# when no releases redirect_url="GH_REPO/releases"
+# when there are releases redirect_url="GH_REPO/releases/tag/v<VERSION>"
+redirect_url=$(curl "${curl_opts[@]}" "$GH_REPO/releases/latest" | sed -n -e "s|^location: *||p" | sed -n -e "s|\r||p")
+version=
+if [[ $redirect_url == "$GH_REPO/releases" ]]; then
+  version="$(list_all_versions | sort_versions | tail -n1 | xargs echo)"
+else
+  version="$(printf "%s\n" "$redirect_url" | sed 's|.*/tag/v\{0,1\}||')"
+fi
+
+printf "%s\n" "$version"
