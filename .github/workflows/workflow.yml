@@ -11,6 +11,7 @@ on:
 jobs:
   plugin_test:
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
