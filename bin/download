@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+
+source "${plugin_dir}/lib/utils.bash"
+
+if [ "$ASDF_INSTALL_TYPE" != "version" ]; then
+  fail "asdf-${TOOL_NAME} supports release installs only"
+fi
+
+mkdir -p "$ASDF_DOWNLOAD_PATH"
+
+resolved_version="$(resolve_version "$ASDF_INSTALL_VERSION")"
+url="$(release_url "$resolved_version")"
+filename="$(basename "$url")"
+download_path="$ASDF_DOWNLOAD_PATH/$filename"
+
+download_release "$resolved_version" "$download_path"
+
+(
+  cd "$ASDF_DOWNLOAD_PATH"
+
+  if [[ $filename == *.zip ]]; then
+    unzip -o "$download_path"
+    rm "$download_path"
+  elif [[ $filename == *.gz ]]; then
+    gunzip "$download_path"
+    # After gunzip, the file is named without .gz
+    extracted_filename="${filename%.gz}"
+    # Ensure it is executable and maybe rename to 'deno' if needed,
+    # though bin/install copies everything.
+    # Let's rename to 'deno' to be consistent if the filename was weird.
+    if [ "$extracted_filename" != "deno" ]; then
+      mv "$extracted_filename" "deno"
+    fi
+    chmod +x "deno"
+  fi
+)
