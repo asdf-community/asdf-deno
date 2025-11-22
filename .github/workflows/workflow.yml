@@ -18,64 +18,26 @@ jobs:
 
     steps:
       - name: asdf_plugin_test
-        uses: asdf-vm/actions/plugin-test@v3
+        uses: asdf-vm/actions/plugin-test@05e0d2ed97b598bfce82fd30daf324ae0c4570e6 # v3.0.2
         with:
           command: deno --version
-        env:
-          GITHUB_API_TOKEN: ${{ github.token }}
-
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Setup asdf
-        uses: asdf-vm/actions/setup@v3
-
-      - name: Setup Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Install bats-core
-        run: brew install bats-core
-
-      - name: Test plugin
-        run: |
-          asdf plugin-add deno $GITHUB_WORKSPACE
-          make test
 
   lint:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Setup Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Install ShellCheck
-        run: brew install shellcheck
-
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - name: Install tools
+        uses: asdf-vm/actions/install@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
       - name: Run ShellCheck
         run: make lint
 
   format:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Setup Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Install shfmt
-        run: brew install shfmt
-
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - name: Install tools
+        uses: asdf-vm/actions/install@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
       - name: Run shfmt
         run: make fmt-check
